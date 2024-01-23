@@ -35,50 +35,45 @@
 
 ```mermaid
 classDiagram
-direction BT
+  direction BT
+  class evolution_requirement {
+    integer amount
+    varchar name
+    integer pokemonId
+    integer id
+  }
 
-class evolution_requirement {
-   integer amount
-   varchar name
-   integer pokemonId
-   integer id
-}
+  class pokemon {
+    integer number
+    varchar name
+    varchar classification
+    text types
+    text resistant
+    text weaknesses
+    numrange weightRange
+    numrange heightRange
+    double precision fleeRate
+    integer maxCP
+    integer maxHP
+    boolean isFavorite
+    integer id
+  }
+  class pokemon_attack {
+    varchar name
+    varchar type
+    integer damage
+    integer pokemonId
+    integer id
+  }
+  class pokemon_evolutions_pokemon {
+    integer pokemonId_1
+    integer pokemonId_2
+  }
 
-class pokemon {
-   integer number
-   varchar name
-   varchar classification
-   text types
-   text resistant
-   text weaknesses
-   numrange weightRange
-   numrange heightRange
-   double precision fleeRate
-   integer maxCP
-   integer maxHP
-   boolean isFavorite
-   integer evolutionRequirementsId
-   integer id
-}
-
-class pokemon_attack {
-   varchar name
-   varchar type
-   integer damage
-   integer pokemonId
-   integer id
-}
-
-class pokemon_evolutions_pokemon {
-   integer pokemonId_1
-   integer pokemonId_2
-}
-
-evolution_requirement  -->  pokemon : pokemonId_id
-pokemon  -->  evolution_requirement : evolutionRequirementsId_id
-pokemon_attack  -->  pokemon : pokemonId_id
-pokemon_evolutions_pokemon  -->  pokemon : pokemonId_2_id
-pokemon_evolutions_pokemon  -->  pokemon : pokemonId_1_id
+  evolution_requirement  -->  pokemon : pokemonId_id
+  pokemon_attack  -->  pokemon : pokemonId_id
+  pokemon_evolutions_pokemon  -->  pokemon : pokemonId_2_id
+  pokemon_evolutions_pokemon  -->  pokemon : pokemonId_1_id
 ```
 
 ## Testing

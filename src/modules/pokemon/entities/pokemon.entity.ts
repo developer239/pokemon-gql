@@ -3,7 +3,6 @@ import {
   Column,
   Entity,
   Index,
-  JoinColumn,
   JoinTable,
   ManyToMany,
   OneToMany,
@@ -120,7 +119,6 @@ export class Pokemon extends EntityHelper {
     (evolutionRequirement) => evolutionRequirement.pokemon,
     { cascade: true }
   )
-  @JoinColumn()
   evolutionRequirements: Relation<EvolutionRequirement>
 
   @Field(() => [Evolution])
