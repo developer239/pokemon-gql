@@ -1,4 +1,5 @@
-import { Resolver, Query, Args, Mutation } from '@nestjs/graphql'
+import { ParseIntPipe } from '@nestjs/common'
+import { Resolver, Query, Args, Mutation, ID } from '@nestjs/graphql'
 import { Pokemon } from 'src/modules/pokemon/entities/pokemon.entity'
 import { PokemonService } from 'src/modules/pokemon/pokemon.service'
 import {
@@ -16,7 +17,7 @@ export class PokemonResolver {
   }
 
   @Query(() => Pokemon)
-  pokemonById(@Args('id') id: number) {
+  pokemonById(@Args('id', { type: () => ID }, ParseIntPipe) id: number) {
     return this.pokemonService.findById(id)
   }
 
