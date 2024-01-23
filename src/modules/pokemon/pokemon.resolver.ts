@@ -70,7 +70,7 @@ export class PokemonResolver {
     return this.pokemonService.findEvolutionRequirementsByPokemonId(pokemon.id)
   }
 
-  // TODO: write for recursive query
+  // TODO: write test for recursive query
   @ResolveField(() => [Pokemon])
   evolutions(@Parent() pokemon: Pokemon): Promise<Pokemon[]> {
     return this.pokemonService.findEvolutionsByPokemonId(pokemon.id)
