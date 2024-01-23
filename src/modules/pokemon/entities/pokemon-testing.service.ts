@@ -54,8 +54,8 @@ export class PokemonTestingService extends TestingEntityService {
     }
   }
 
-  public async createTestPokemon() {
-    const pokemonData = this.createPokemonData()
+  public async createTestPokemon(data?: Partial<IPokemonTestData>) {
+    const pokemonData = this.createPokemonData(data)
 
     const pokemon = await this.saveFixture(Pokemon, {
       ...pokemonData,

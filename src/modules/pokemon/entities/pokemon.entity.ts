@@ -77,8 +77,7 @@ export class Pokemon extends BaseEntity {
   @Column('boolean')
   isFavorite: boolean
 
-  @Field(() => [Attack])
-  @ManyToMany(() => Attack, { cascade: true })
+  @ManyToMany(() => Attack, (attack) => attack.pokemons, { cascade: true })
   @JoinTable()
   attacks: Relation<Attack>[]
 
@@ -93,5 +92,5 @@ export class Pokemon extends BaseEntity {
   @Field(() => [Evolution])
   @ManyToMany(() => Pokemon, { cascade: true })
   @JoinTable()
-  evolutions: Pokemon[]
+  evolutions: Relation<Pokemon>[]
 }

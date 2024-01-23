@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
+import { Attack } from 'src/modules/pokemon/entities/attack.entity'
+import { EvolutionRequirement } from 'src/modules/pokemon/entities/evolution-requirement.enity'
 import { Pokemon } from 'src/modules/pokemon/entities/pokemon.entity'
 import { PokemonsQueryInput } from 'src/modules/pokemon/pokemon.types'
 
@@ -8,7 +10,11 @@ import { PokemonsQueryInput } from 'src/modules/pokemon/pokemon.types'
 export class PokemonService {
   constructor(
     @InjectRepository(Pokemon)
-    private readonly pokemonRepository: Repository<Pokemon>
+    private readonly pokemonRepository: Repository<Pokemon>,
+    @InjectRepository(Attack)
+    private readonly attackRepository: Repository<Attack>,
+    @InjectRepository(EvolutionRequirement)
+    private readonly evolutionRequirementRepository: Repository<EvolutionRequirement>
   ) {}
 
   async addFavorite(id: number): Promise<Pokemon> {
@@ -41,8 +47,8 @@ export class PokemonService {
 
   async findAllTypes(): Promise<string[]> {
     const result = await this.pokemonRepository.query(`
-      SELECT DISTINCT unnest(types) AS type
-      FROM pokemon
+      SELECT DISTINCT unnest(string_to_array(types, ',')) AS type
+      FROM pokemon;
     `)
 
     return result.map((row) => row.type)
@@ -62,7 +68,7 @@ export class PokemonService {
     }
 
     if (type) {
-      queryBuilder.andWhere(':type = ANY(pokemon.types)', { type })
+      queryBuilder.andWhere('pokemon.types ILIKE :type', { type: `%${type}%` })
     }
 
     const [result, total] = await queryBuilder
@@ -71,5 +77,21 @@ export class PokemonService {
       .getManyAndCount()
 
     return { items: result, count: total }
+  }
+
+  findAttacksByPokemonId(id: number): Promise<Attack[]> {
+    return this.attackRepository
+      .createQueryBuilder('attack')
+      .innerJoinAndSelect('attack.pokemons', 'pokemon')
+      .where('pokemon.id = :id', { id })
+      .getMany()
+  }
+
+  findEvolutionRequirementsByPokemonId(
+    id: number
+  ): Promise<EvolutionRequirement> {
+    return this.evolutionRequirementRepository.findOneOrFail({
+      where: { pokemon: { id } },
+    })
   }
 }

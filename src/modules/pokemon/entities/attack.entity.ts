@@ -44,7 +44,6 @@ export class Attack extends BaseEntity {
   @Column()
   damage: number
 
-  @Field(() => [Pokemon])
   @ManyToMany(() => Pokemon, (pokemon) => pokemon.attacks)
-  pokemon: Relation<Pokemon>[]
+  pokemons: Relation<Pokemon>[]
 }

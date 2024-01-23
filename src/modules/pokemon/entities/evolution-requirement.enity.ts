@@ -25,7 +25,6 @@ export class EvolutionRequirement extends BaseEntity {
   @Column()
   name: string
 
-  @Field(() => Pokemon)
   @OneToOne(() => Pokemon, (pokemon) => pokemon.evolutionRequirements)
   @JoinColumn()
   pokemon: Relation<Pokemon>
