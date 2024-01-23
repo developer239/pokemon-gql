@@ -11,7 +11,7 @@ import {
 } from 'typeorm'
 import { Attack } from 'src/modules/pokemon/entities/attack.entity'
 import { EvolutionRequirement } from 'src/modules/pokemon/entities/evolution-requirement.enity'
-import { Dimension, Evolution } from 'src/modules/pokemon/pokemon.types'
+import { Dimension } from 'src/modules/pokemon/pokemon.types'
 import { BaseEntity } from 'src/utils/base.entity'
 import { RangeTransformer } from 'src/utils/range.transformer'
 
@@ -89,7 +89,7 @@ export class Pokemon extends BaseEntity {
   )
   evolutionRequirements: Relation<EvolutionRequirement>
 
-  @Field(() => [Evolution])
+  @Field(() => [Pokemon])
   @ManyToMany(() => Pokemon, { cascade: true })
   @JoinTable()
   evolutions: Relation<Pokemon>[]

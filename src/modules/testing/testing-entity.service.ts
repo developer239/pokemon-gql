@@ -45,7 +45,7 @@ export class TestingEntityService {
       where: {
         id,
       },
-    })
+    }) as unknown as Promise<TEntity | null>
   }
 
   public list<TEntity extends BaseEntity>(

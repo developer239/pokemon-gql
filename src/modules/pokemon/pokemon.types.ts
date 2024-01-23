@@ -1,4 +1,4 @@
-import { InputType, Field, Int, ObjectType, ID } from '@nestjs/graphql'
+import { InputType, Field, Int, ObjectType } from '@nestjs/graphql'
 import { Pokemon } from 'src/modules/pokemon/entities/pokemon.entity'
 
 @ObjectType()
@@ -8,18 +8,6 @@ export class Dimension {
 
   @Field()
   maximum: number
-}
-
-@ObjectType()
-export class Evolution {
-  @Field(() => ID)
-  id: number
-
-  @Field()
-  number: number
-
-  @Field()
-  name: string
 }
 
 @InputType()

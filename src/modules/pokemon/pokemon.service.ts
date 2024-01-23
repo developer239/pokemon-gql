@@ -94,4 +94,12 @@ export class PokemonService {
       where: { pokemon: { id } },
     })
   }
+
+  findEvolutionsByPokemonId(id: number): Promise<Pokemon[]> {
+    return this.pokemonRepository
+      .createQueryBuilder('pokemon')
+      .innerJoinAndSelect('pokemon.evolutions', 'evolution')
+      .where('evolution.id = :id', { id })
+      .getMany()
+  }
 }
