@@ -1,6 +1,7 @@
 import { INestApplication } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { DataSource } from 'typeorm'
+import { PokemonSeedService } from 'src/modules/database/seeds/pokemon/pokemon-seed.service'
 import { SeedModule } from 'src/modules/database/seeds/seeed.module'
 
 const clearDatabase = async (app: INestApplication) => {
@@ -20,6 +21,8 @@ const runSeed = async () => {
   const app = await NestFactory.create(SeedModule)
 
   await clearDatabase(app)
+
+  await app.get(PokemonSeedService).run()
 
   await app.close()
 }

@@ -5,13 +5,12 @@ import {
   Index,
   JoinTable,
   ManyToMany,
-  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   Relation,
 } from 'typeorm'
+import { Attack } from 'src/modules/pokemon/entities/attack.entity'
 import { EvolutionRequirement } from 'src/modules/pokemon/entities/evolution-requirement.enity'
-import { PokemonAttack } from 'src/modules/pokemon/entities/pokemon-attack.entity'
 import { Dimension, Evolution } from 'src/modules/pokemon/pokemon.types'
 import { BaseEntity } from 'src/utils/base.entity'
 import { RangeTransformer } from 'src/utils/range.transformer'
@@ -78,9 +77,10 @@ export class Pokemon extends BaseEntity {
   @Column('boolean')
   isFavorite: boolean
 
-  @Field(() => [PokemonAttack])
-  @OneToMany(() => PokemonAttack, (attack) => attack.pokemon, { cascade: true })
-  attacks: Relation<PokemonAttack>[]
+  @Field(() => [Attack])
+  @ManyToMany(() => Attack, { cascade: true })
+  @JoinTable()
+  attacks: Relation<Attack>[]
 
   @Field(() => EvolutionRequirement)
   @OneToOne(

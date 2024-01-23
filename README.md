@@ -36,6 +36,15 @@
 ```mermaid
 classDiagram
   direction BT
+
+  class attack {
+    varchar name
+    varchar type
+    attack_category_enum category
+    integer damage
+    integer id
+  }
+
   class evolution_requirement {
     integer amount
     varchar name
@@ -58,22 +67,22 @@ classDiagram
     boolean isFavorite
     integer id
   }
-  class pokemon_attack {
-    varchar name
-    varchar type
-    integer damage
+
+  class pokemon_attacks_attack {
     integer pokemonId
-    integer id
+    integer attackId
   }
+
   class pokemon_evolutions_pokemon {
     integer pokemonId_1
     integer pokemonId_2
   }
 
   evolution_requirement  -->  pokemon : pokemonId_id
-  pokemon_attack  -->  pokemon : pokemonId_id
-  pokemon_evolutions_pokemon  -->  pokemon : pokemonId_2_id
+  pokemon_attacks_attack  -->  attack : attackId_id
+  pokemon_attacks_attack  -->  pokemon : pokemonId_id
   pokemon_evolutions_pokemon  -->  pokemon : pokemonId_1_id
+  pokemon_evolutions_pokemon  -->  pokemon : pokemonId_2_id
 ```
 
 ## Testing
