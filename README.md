@@ -21,7 +21,7 @@
 - `make infra` - start postgres docker container
 - `make develop` - start development server
 - `make type-check` - run type checking
-- `make lint` - run linter
+- `make lint-fix` - run linter
 - `make format` - run prettier
 
 ## Database
