@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql'
+import { Field, ID, ObjectType } from '@nestjs/graphql'
 import {
   Entity,
   Column,
@@ -13,7 +13,7 @@ import { EntityHelper } from 'src/utils/entity-helper'
 @ObjectType()
 @Entity()
 export class EvolutionRequirement extends EntityHelper {
-  @Field()
+  @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number
 

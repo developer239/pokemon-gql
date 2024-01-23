@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql'
+import { Field, ID, ObjectType } from '@nestjs/graphql'
 import {
   Column,
   Entity,
@@ -51,7 +51,7 @@ class Dimension {
 @Entity()
 @ObjectType()
 export class Pokemon extends EntityHelper {
-  @Field()
+  @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number
 
