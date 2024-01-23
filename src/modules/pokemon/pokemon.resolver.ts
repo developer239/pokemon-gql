@@ -49,12 +49,12 @@ export class PokemonResolver {
   }
 
   @Mutation(() => Pokemon)
-  addFavorite(@Args('id') id: number) {
+  addFavorite(@Args('id', { type: () => ID }, ParseIntPipe) id: number) {
     return this.pokemonService.addFavorite(id)
   }
 
   @Mutation(() => Pokemon)
-  removeFavorite(@Args('id') id: number) {
+  removeFavorite(@Args('id', { type: () => ID }, ParseIntPipe) id: number) {
     return this.pokemonService.removeFavorite(id)
   }
 
