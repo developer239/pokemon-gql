@@ -1,5 +1,5 @@
 import { Resolver, Query, Field, ObjectType } from '@nestjs/graphql'
-import { PokemonService } from "src/modules/pokemon/pokemon.service";
+import { PokemonService } from 'src/modules/pokemon/pokemon.service'
 
 @ObjectType()
 class Pokemon {
