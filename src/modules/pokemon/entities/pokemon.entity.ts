@@ -14,6 +14,7 @@ import {
 } from 'typeorm'
 import { EvolutionRequirement } from 'src/modules/pokemon/entities/evolution-requirement.enity'
 import { PokemonAttack } from 'src/modules/pokemon/entities/pokemon-attack.entity'
+import { Evolution } from 'src/modules/pokemon/pokemon.types'
 import { EntityHelper } from 'src/utils/entity-helper'
 
 // TODO: move to separate file
@@ -122,8 +123,8 @@ export class Pokemon extends EntityHelper {
   @JoinColumn()
   evolutionRequirements: Relation<EvolutionRequirement>
 
-  @Field(() => [Pokemon])
+  @Field(() => [Evolution])
   @ManyToMany(() => Pokemon, { cascade: true })
   @JoinTable()
-  evolutions: Relation<Pokemon>[]
+  evolutions: Pokemon[]
 }
