@@ -1,4 +1,4 @@
-import { Resolver, Query, Args } from '@nestjs/graphql'
+import { Resolver, Query, Args, Mutation } from '@nestjs/graphql'
 import { Pokemon } from 'src/modules/pokemon/entities/pokemon.entity'
 import { PokemonService } from 'src/modules/pokemon/pokemon.service'
 import {
@@ -36,5 +36,15 @@ export class PokemonResolver {
       count,
       items: pokemons,
     }
+  }
+
+  @Mutation(() => Pokemon)
+  addFavorite(@Args('id') id: number): Promise<Pokemon> {
+    return this.pokemonService.addFavorite(id)
+  }
+
+  @Mutation(() => Pokemon)
+  removeFavorite(@Args('id') id: number): Promise<Pokemon> {
+    return this.pokemonService.removeFavorite(id)
   }
 }

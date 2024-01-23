@@ -11,6 +11,26 @@ export class PokemonService {
     private readonly pokemonRepository: Repository<Pokemon>
   ) {}
 
+  async addFavorite(id: number): Promise<Pokemon> {
+    const pokemon = await this.pokemonRepository.findOneOrFail({
+      where: { id },
+    })
+
+    pokemon.isFavorite = true
+
+    return this.pokemonRepository.save(pokemon)
+  }
+
+  async removeFavorite(id: number): Promise<Pokemon> {
+    const pokemon = await this.pokemonRepository.findOneOrFail({
+      where: { id },
+    })
+
+    pokemon.isFavorite = false
+
+    return this.pokemonRepository.save(pokemon)
+  }
+
   findByName(name: string): Promise<Pokemon> {
     return this.pokemonRepository.findOneOrFail({ where: { name } })
   }
