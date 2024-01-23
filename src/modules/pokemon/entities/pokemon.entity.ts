@@ -47,8 +47,8 @@ class Dimension {
   maximum: number
 }
 
-@ObjectType()
 @Entity()
+@ObjectType()
 export class Pokemon extends EntityHelper {
   @Field()
   @PrimaryGeneratedColumn()
