@@ -91,3 +91,4 @@ Most of the tests are E2E tests, which means that they are testing the whole app
 that.
 
 - `make test` - run all tests
+- `make coverage` - run test coverage
