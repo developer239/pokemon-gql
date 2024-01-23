@@ -11,12 +11,12 @@ export class PokemonResolver {
   constructor(private readonly pokemonService: PokemonService) {}
 
   @Query(() => Pokemon)
-  pokemonByName(@Args('name') name: string): Promise<Pokemon | undefined> {
+  pokemonByName(@Args('name') name: string) {
     return this.pokemonService.findByName(name)
   }
 
   @Query(() => Pokemon)
-  pokemonById(@Args('id') id: number): Promise<Pokemon | undefined> {
+  pokemonById(@Args('id') id: number) {
     return this.pokemonService.findById(id)
   }
 
@@ -26,25 +26,23 @@ export class PokemonResolver {
   }
 
   @Query(() => PokemonList)
-  async pokemons(
-    @Args('query') query: PokemonsQueryInput
-  ): Promise<PokemonList> {
-    const { pokemons, count } = await this.pokemonService.findAll(query)
+  async pokemons(@Args('query') query: PokemonsQueryInput) {
+    const { items, count } = await this.pokemonService.findAll(query)
     return {
       limit: query.limit,
       offset: query.offset,
       count,
-      items: pokemons,
+      items,
     }
   }
 
   @Mutation(() => Pokemon)
-  addFavorite(@Args('id') id: number): Promise<Pokemon> {
+  addFavorite(@Args('id') id: number) {
     return this.pokemonService.addFavorite(id)
   }
 
   @Mutation(() => Pokemon)
-  removeFavorite(@Args('id') id: number): Promise<Pokemon> {
+  removeFavorite(@Args('id') id: number) {
     return this.pokemonService.removeFavorite(id)
   }
 }

@@ -50,7 +50,7 @@ export class PokemonService {
 
   async findAll(
     query: PokemonsQueryInput
-  ): Promise<{ pokemons: Pokemon[]; count: number }> {
+  ): Promise<{ items: Pokemon[]; count: number }> {
     const { limit, offset, search, type } = query
 
     const queryBuilder = this.pokemonRepository.createQueryBuilder('pokemon')
@@ -70,6 +70,6 @@ export class PokemonService {
       .take(limit)
       .getManyAndCount()
 
-    return { pokemons: result, count: total }
+    return { items: result, count: total }
   }
 }
