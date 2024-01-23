@@ -1,6 +1,4 @@
-import {
-  VersioningType,
-} from '@nestjs/common'
+import { VersioningType } from '@nestjs/common'
 import { ModuleMetadata } from '@nestjs/common/interfaces'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { Test } from '@nestjs/testing'
@@ -31,9 +29,7 @@ export const bootstrap = async (metadata: ModuleMetadata) => {
         ...(metadata.imports ? metadata.imports : []),
       ],
       controllers: [...(metadata?.controllers ?? [])],
-      providers: [
-        ...(metadata?.providers ?? []),
-      ],
+      providers: [...(metadata?.providers ?? [])],
       exports: [...(metadata?.exports ?? [])],
     }).compile()
   ).createNestApplication()
