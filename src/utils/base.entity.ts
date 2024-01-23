@@ -1,8 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 import { Exclude, instanceToPlain } from 'class-transformer'
-import { AfterLoad, BaseEntity } from 'typeorm'
+import { AfterLoad, BaseEntity as OriginalBse } from 'typeorm'
 
-export class EntityHelper extends BaseEntity {
+export class BaseEntity extends OriginalBse {
   @Exclude({ toPlainOnly: true })
   __entity?: string
 

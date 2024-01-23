@@ -14,7 +14,6 @@ import { PokemonModule } from 'src/modules/pokemon/pokemon.module'
 
 @Module({
   imports: [
-    // TODO: throttle
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
@@ -24,6 +23,7 @@ import { PokemonModule } from 'src/modules/pokemon/pokemon.module'
         ...databaseConfigSchema,
       }),
     }),
+    // TODO: throttle
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       playground: true,

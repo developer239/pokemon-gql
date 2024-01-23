@@ -1,4 +1,4 @@
-name: Template NestJS API
+name: Pokemon API
 
 on:
   push:

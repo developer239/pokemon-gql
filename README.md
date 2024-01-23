@@ -1,6 +1,6 @@
 # Pokemon API
 
-![master](https://github.com/strvcom/backend-template-nestjs-api/actions/workflows/api-ci.yml/badge.svg)
+![master](https://github.com/developer239/pokemon-gql/actions/workflows/api-ci.yml/badge.svg)
 
 ## Table of Contents
 

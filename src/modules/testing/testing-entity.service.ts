@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectDataSource } from '@nestjs/typeorm'
 import { EntityTarget } from 'typeorm'
 import { DataSource } from 'typeorm/data-source/DataSource'
-import { EntityHelper } from 'src/utils/entity-helper'
+import { BaseEntity } from 'src/utils/base.entity'
 
 type IConstructorOf<TEntity> = new () => TEntity
 
@@ -11,7 +11,7 @@ type IConstructorOf<TEntity> = new () => TEntity
 export class TestingEntityService {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
-  public async saveFixture<TEntity extends EntityHelper, TData>(
+  public async saveFixture<TEntity extends BaseEntity, TData>(
     model: IConstructorOf<TEntity>,
     data?: TData
   ): Promise<TEntity> {
@@ -48,7 +48,7 @@ export class TestingEntityService {
     })
   }
 
-  public list<TEntity extends EntityHelper>(
+  public list<TEntity extends BaseEntity>(
     entityClass: string
   ): Promise<TEntity[]> {
     return this.dataSource.manager.find<TEntity>(entityClass)

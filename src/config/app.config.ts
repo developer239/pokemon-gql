@@ -4,7 +4,6 @@ import * as Joi from 'joi'
 export const appConfigSchema = {
   NODE_ENV: Joi.string().valid('development', 'production', 'test').required(),
   APP_NAME: Joi.string().required(),
-  API_PREFIX: Joi.string().default('api'),
   PORT: Joi.number().port().required(),
 }
 
@@ -13,7 +12,6 @@ export const appConfig = registerAs('app', () => ({
   name: process.env.APP_NAME,
   workingDirectory: process.env.PWD || process.cwd(),
   port: process.env.PORT ? parseInt(process.env.PORT, 10) : 8080,
-  apiPrefix: process.env.API_PREFIX || 'api',
 }))
 
 export type AppConfigType = ConfigType<typeof appConfig>

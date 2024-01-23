@@ -9,47 +9,16 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
   Relation,
-  ValueTransformer,
 } from 'typeorm'
 import { EvolutionRequirement } from 'src/modules/pokemon/entities/evolution-requirement.enity'
 import { PokemonAttack } from 'src/modules/pokemon/entities/pokemon-attack.entity'
-import { Evolution } from 'src/modules/pokemon/pokemon.types'
-import { EntityHelper } from 'src/utils/entity-helper'
-
-// TODO: move to separate file
-export class RangeTransformer implements ValueTransformer {
-  from(value: string): { minimum: number; maximum: number } {
-    const regex = /\[(.*),(.*)\)/u
-    const match = regex.exec(value)
-
-    if (!match?.[1] || !match?.[2]) {
-      throw new Error('Invalid range format')
-    }
-
-    return {
-      minimum: parseFloat(match[1]),
-      maximum: parseFloat(match[2]),
-    }
-  }
-
-  to(value: { minimum: number; maximum: number }): string {
-    return `[${value.minimum},${value.maximum})`
-  }
-}
-
-// TODO: move to separate file
-@ObjectType()
-class Dimension {
-  @Field()
-  minimum: number
-
-  @Field()
-  maximum: number
-}
+import { Dimension, Evolution } from 'src/modules/pokemon/pokemon.types'
+import { BaseEntity } from 'src/utils/base.entity'
+import { RangeTransformer } from 'src/utils/range.transformer'
 
 @Entity()
 @ObjectType()
-export class Pokemon extends EntityHelper {
+export class Pokemon extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number

@@ -7,11 +7,11 @@ import {
   Relation,
 } from 'typeorm'
 import { Pokemon } from 'src/modules/pokemon/entities/pokemon.entity'
-import { EntityHelper } from 'src/utils/entity-helper'
+import { BaseEntity } from 'src/utils/base.entity'
 
 @ObjectType()
 @Entity()
-export class PokemonAttack extends EntityHelper {
+export class PokemonAttack extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number
