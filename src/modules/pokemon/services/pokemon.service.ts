@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { EvolutionRequirement } from 'src/modules/pokemon/entities/evolution-requirement.enity'
@@ -17,9 +17,13 @@ export class PokemonService {
   ) {}
 
   async addFavorite(id: number): Promise<Pokemon> {
-    const pokemon = await this.pokemonRepository.findOneOrFail({
+    const pokemon = await this.pokemonRepository.findOne({
       where: { id },
     })
+
+    if (!pokemon) {
+      throw new NotFoundException('Pokemon not found')
+    }
 
     pokemon.isFavorite = true
 
@@ -31,9 +35,13 @@ export class PokemonService {
   }
 
   async removeFavorite(id: number): Promise<Pokemon> {
-    const pokemon = await this.pokemonRepository.findOneOrFail({
+    const pokemon = await this.pokemonRepository.findOne({
       where: { id },
     })
+
+    if (!pokemon) {
+      throw new NotFoundException('Pokemon not found')
+    }
 
     pokemon.isFavorite = false
 
@@ -44,12 +52,23 @@ export class PokemonService {
     return result
   }
 
-  findByName(name: string): Promise<Pokemon> {
-    return this.pokemonRepository.findOneOrFail({ where: { name } })
+  async findByName(name: string): Promise<Pokemon> {
+    const result = await this.pokemonRepository.findOne({ where: { name } })
+
+    if (!result) {
+      throw new NotFoundException('Pokemon not found')
+    }
+
+    return result
   }
 
-  findById(id: number): Promise<Pokemon> {
-    return this.pokemonRepository.findOneOrFail({ where: { id } })
+  async findById(id: number): Promise<Pokemon> {
+    const result = await this.pokemonRepository.findOne({ where: { id } })
+    if (!result) {
+      throw new NotFoundException('Pokemon not found')
+    }
+
+    return result
   }
 
   async findAllTypes(): Promise<string[]> {
@@ -89,8 +108,12 @@ export class PokemonService {
   findEvolutionRequirementsByPokemonId(
     id: number
   ): Promise<EvolutionRequirement> {
-    return this.evolutionRequirementRepository.findOneOrFail({
-      where: { pokemon: { id } },
-    })
+    try {
+      return this.evolutionRequirementRepository.findOneOrFail({
+        where: { pokemon: { id } },
+      })
+    } catch (error) {
+      throw new NotFoundException('Evolution requirements not found')
+    }
   }
 }

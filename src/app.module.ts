@@ -12,6 +12,7 @@ import { DatabaseModule } from 'src/modules/database/database.module'
 import { HomeModule } from 'src/modules/home/home.module'
 import { PokemonModule } from 'src/modules/pokemon/pokemon.module'
 import { ApolloComplexityPlugin } from 'src/utils/apollo-complexity.plugin'
+import { GqlErrorFilter } from 'src/utils/gql-error.filter'
 
 @Module({
   imports: [
@@ -30,6 +31,10 @@ import { ApolloComplexityPlugin } from 'src/utils/apollo-complexity.plugin'
       autoSchemaFile: true,
       introspection: true,
       plugins: [new ApolloComplexityPlugin(50)],
+      formatError: (error) => {
+        const gqlFilter = new GqlErrorFilter()
+        return gqlFilter.catch(error, null)
+      },
     }),
     DatabaseModule,
     HomeModule,
