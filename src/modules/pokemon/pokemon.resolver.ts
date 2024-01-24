@@ -17,6 +17,7 @@ import {
   PokemonsQueryInput,
 } from 'src/modules/pokemon/pokemon.types'
 
+// TODO: use data loader and resolve n+1 problem
 @Resolver(() => Pokemon)
 export class PokemonResolver {
   constructor(private readonly pokemonService: PokemonService) {}
