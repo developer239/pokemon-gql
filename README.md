@@ -9,18 +9,24 @@
 - [Database](#database)
 - [Testing](#testing)
 
-## Setup
+## Dev Setup
 
-1. Install nvm: 2. Linux: `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash` 3. Mac: `brew install nvm`
-2. Use nvm: `nvm use`
-3. Install makefile
-   1. Linux: `sudo apt install make`
-   2. Mac: `brew install make`
-4. Install dependencies: `make install` (the project uses [yarn](https://github.com/yarnpkg))
-5. Create local environment file: `cp .env.template .env`
-6. Run infrastructure `make infra` (`.db/init/init.sql` should automatically create `api_db` database)
-7. Run database migrations: `make migration-run`
-8. (optional) Run tests: `make test` (make sure that `api_db_test` database exists)
+1. Install dependencies: `make install` (the project uses [yarn](https://github.com/yarnpkg))
+2. Create local environment file: `cp .env.template .env`
+3. Run infrastructure `make infra` (`.db/init/init.sql` should automatically create `api_db` database)
+4. Run database migrations: `make migration-run`
+5. Seed database: `make seed-database`
+6. Run development server: `make develop`
+7. Go to `localhost:8080/graphql`
+
+## Dev Setup Docker
+
+1. Install dependencies: `make install` (the project uses [yarn](https://github.com/yarnpkg))
+2. Create local environment file: `cp .env.template .env`
+3. Run dev docker compose `docker-compose -f compose-full.dev.yaml up`
+4. Run database migrations: `make migration-run`
+5. Seed database: `make seed-database`
+6. Go to `localhost:8080/graphql`
 
 ## Development
 
@@ -42,7 +48,6 @@
 ```mermaid
 classDiagram
   direction BT
-
   class attack {
     varchar name
     varchar type
@@ -50,14 +55,12 @@ classDiagram
     integer damage
     integer id
   }
-
   class evolution_requirement {
     integer amount
     varchar name
     integer pokemonId
     integer id
   }
-
   class pokemon {
     integer number
     varchar name
@@ -70,25 +73,33 @@ classDiagram
     double precision fleeRate
     integer maxCP
     integer maxHP
-    boolean isFavorite
     integer id
   }
-
   class pokemon_attacks_attack {
     integer pokemonId
     integer attackId
   }
-
   class pokemon_evolutions_pokemon {
     integer pokemonId_1
     integer pokemonId_2
+  }
+  class user {
+    varchar email
+    varchar password
+    integer id
+  }
+  class user_favorite_pokemons_pokemon {
+    integer userId
+    integer pokemonId
   }
 
   evolution_requirement  -->  pokemon : pokemonId_id
   pokemon_attacks_attack  -->  attack : attackId_id
   pokemon_attacks_attack  -->  pokemon : pokemonId_id
-  pokemon_evolutions_pokemon  -->  pokemon : pokemonId_1_id
   pokemon_evolutions_pokemon  -->  pokemon : pokemonId_2_id
+  pokemon_evolutions_pokemon  -->  pokemon : pokemonId_1_id
+  user_favorite_pokemons_pokemon  -->  pokemon : pokemonId_id
+  user_favorite_pokemons_pokemon  -->  user : userId_id
 ```
 
 ## Testing
@@ -98,5 +109,3 @@ that.
 
 - `make test` - run all tests
 - `make coverage` - run test coverage
-
-![tests-preview](./tests-preview.png)

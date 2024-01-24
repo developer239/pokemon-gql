@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  app:
+    image: node:20-alpine3.18
+    container_name: pokemon-api-dev
+    working_dir: /app
+    environment:
+      - NODE_ENV=development
+      # Note: overriding DATABASE_URL to target "database" service
+      - DATABASE_URL=postgres://root:secret@database:5432/api_db
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "8080:8080"
+    command: sh -c "yarn install && npx nest start --watch"
+    depends_on:
+      - database
+
+  database:
+    image: postgres:16-alpine
+    container_name: pokemon-api-database
+    environment:
+      POSTGRES_DB: api_db
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - ./.db/data:/var/lib/postgresql/data:delegated
+      - ./.db/init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
