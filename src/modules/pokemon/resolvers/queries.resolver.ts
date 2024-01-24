@@ -3,7 +3,6 @@ import {
   Resolver,
   Query,
   Args,
-  Mutation,
   ID,
   ResolveField,
   Parent,
@@ -11,15 +10,19 @@ import {
 import { Attack } from 'src/modules/pokemon/entities/attack.entity'
 import { EvolutionRequirement } from 'src/modules/pokemon/entities/evolution-requirement.enity'
 import { Pokemon } from 'src/modules/pokemon/entities/pokemon.entity'
-import { PokemonService } from 'src/modules/pokemon/pokemon.service'
 import {
   PokemonList,
   PokemonsQueryInput,
 } from 'src/modules/pokemon/pokemon.types'
+import { LoaderService } from 'src/modules/pokemon/services/loader.service'
+import { PokemonService } from 'src/modules/pokemon/services/pokemon.service'
 
 @Resolver(() => Pokemon)
-export class PokemonResolver {
-  constructor(private readonly pokemonService: PokemonService) {}
+export class QueriesResolver {
+  constructor(
+    private readonly pokemonService: PokemonService,
+    private readonly pokemonLoaderService: LoaderService
+  ) {}
 
   @Query(() => Pokemon)
   pokemonByName(@Args('name') name: string) {
@@ -48,19 +51,9 @@ export class PokemonResolver {
     }
   }
 
-  @Mutation(() => Pokemon)
-  addFavorite(@Args('id', { type: () => ID }, ParseIntPipe) id: number) {
-    return this.pokemonService.addFavorite(id)
-  }
-
-  @Mutation(() => Pokemon)
-  removeFavorite(@Args('id', { type: () => ID }, ParseIntPipe) id: number) {
-    return this.pokemonService.removeFavorite(id)
-  }
-
   @ResolveField(() => [Attack])
   attacks(@Parent() pokemon: Pokemon): Promise<Attack[]> {
-    return this.pokemonService.getAttackLoader().load(pokemon.id)
+    return this.pokemonLoaderService.getAttackLoader().load(pokemon.id)
   }
 
   @ResolveField(() => EvolutionRequirement)
@@ -73,6 +66,6 @@ export class PokemonResolver {
   // TODO: write test for recursive query
   @ResolveField(() => [Pokemon])
   evolutions(@Parent() pokemon: Pokemon): Promise<Pokemon[]> {
-    return this.pokemonService.getEvolutionLoader().load(pokemon.id)
+    return this.pokemonLoaderService.getEvolutionLoader().load(pokemon.id)
   }
 }
