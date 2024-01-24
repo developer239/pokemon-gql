@@ -93,3 +93,5 @@ that.
 
 - `make test` - run all tests
 - `make coverage` - run test coverage
+
+![tests-preview](./tests-preview.png)
