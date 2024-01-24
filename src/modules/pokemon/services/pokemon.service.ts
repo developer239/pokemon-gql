@@ -4,6 +4,7 @@ import { Repository } from 'typeorm'
 import { EvolutionRequirement } from 'src/modules/pokemon/entities/evolution-requirement.enity'
 import { Pokemon } from 'src/modules/pokemon/entities/pokemon.entity'
 import { PokemonsQueryInput } from 'src/modules/pokemon/pokemon.types'
+import { LoaderService } from 'src/modules/pokemon/services/loader.service'
 
 @Injectable()
 export class PokemonService {
@@ -11,7 +12,8 @@ export class PokemonService {
     @InjectRepository(Pokemon)
     private readonly pokemonRepository: Repository<Pokemon>,
     @InjectRepository(EvolutionRequirement)
-    private readonly evolutionRequirementRepository: Repository<EvolutionRequirement>
+    private readonly evolutionRequirementRepository: Repository<EvolutionRequirement>,
+    private readonly loaderService: LoaderService
   ) {}
 
   async addFavorite(id: number): Promise<Pokemon> {
@@ -21,7 +23,11 @@ export class PokemonService {
 
     pokemon.isFavorite = true
 
-    return this.pokemonRepository.save(pokemon)
+    const result = await this.pokemonRepository.save(pokemon)
+
+    this.loaderService.invalidateEvolutions(id)
+
+    return result
   }
 
   async removeFavorite(id: number): Promise<Pokemon> {
@@ -31,7 +37,11 @@ export class PokemonService {
 
     pokemon.isFavorite = false
 
-    return this.pokemonRepository.save(pokemon)
+    const result = this.pokemonRepository.save(pokemon)
+
+    this.loaderService.invalidateEvolutions(id)
+
+    return result
   }
 
   findByName(name: string): Promise<Pokemon> {

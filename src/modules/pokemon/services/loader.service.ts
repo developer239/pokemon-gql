@@ -30,6 +30,10 @@ export class LoaderService {
     return this.evolutionLoader
   }
 
+  public invalidateEvolutions(pokemonId: number): void {
+    this.evolutionLoader.clear(pokemonId)
+  }
+
   private async findAttacksByPokemonIds(
     pokemonIds: readonly number[]
   ): Promise<Attack[][]> {
