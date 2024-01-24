@@ -1,6 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
+import { User } from 'src/modules/auth/entities/user.entity'
 import { EvolutionRequirement } from 'src/modules/pokemon/entities/evolution-requirement.enity'
 import { Pokemon } from 'src/modules/pokemon/entities/pokemon.entity'
 import { PokemonsQueryInput } from 'src/modules/pokemon/pokemon.types'
@@ -16,7 +21,7 @@ export class PokemonService {
     private readonly loaderService: LoaderService
   ) {}
 
-  async addFavorite(id: number): Promise<Pokemon> {
+  async addFavorite(id: number, user?: User): Promise<Pokemon> {
     const pokemon = await this.pokemonRepository.findOne({
       where: { id },
     })
@@ -25,7 +30,11 @@ export class PokemonService {
       throw new NotFoundException('Pokemon not found')
     }
 
-    pokemon.isFavorite = true
+    await this.pokemonRepository
+      .createQueryBuilder('pokemon')
+      .relation('favoritedBy')
+      .of(pokemon)
+      .add(user)
 
     const result = await this.pokemonRepository.save(pokemon)
 
@@ -34,7 +43,7 @@ export class PokemonService {
     return result
   }
 
-  async removeFavorite(id: number): Promise<Pokemon> {
+  async removeFavorite(id: number, user?: User): Promise<Pokemon> {
     const pokemon = await this.pokemonRepository.findOne({
       where: { id },
     })
@@ -43,13 +52,15 @@ export class PokemonService {
       throw new NotFoundException('Pokemon not found')
     }
 
-    pokemon.isFavorite = false
-
-    const result = this.pokemonRepository.save(pokemon)
+    await this.pokemonRepository
+      .createQueryBuilder('pokemon')
+      .relation('favoritedBy')
+      .of(pokemon)
+      .remove(user)
 
     this.loaderService.invalidateEvolutions(id)
 
-    return result
+    return pokemon
   }
 
   async findByName(name: string): Promise<Pokemon> {
@@ -81,7 +92,8 @@ export class PokemonService {
   }
 
   async findAll(
-    query: PokemonsQueryInput
+    query: PokemonsQueryInput,
+    user?: User
   ): Promise<{ items: Pokemon[]; count: number }> {
     const { limit, offset, search, type, isFavorite } = query
 
@@ -97,8 +109,22 @@ export class PokemonService {
       queryBuilder.andWhere('pokemon.types ILIKE :type', { type: `%${type}%` })
     }
 
-    if (isFavorite) {
-      queryBuilder.andWhere('pokemon.isFavorite = :isFavorite', { isFavorite })
+    if (isFavorite !== undefined) {
+      if (!user) {
+        throw new ForbiddenException()
+      }
+
+      if (isFavorite) {
+        queryBuilder
+          .innerJoin('pokemon.favoritedBy', 'users')
+          .where('users.id = :userId', { userId: user.id })
+      }
+
+      if (!isFavorite) {
+        queryBuilder
+          .leftJoin('pokemon.favoritedBy', 'users')
+          .where('users.id IS NULL')
+      }
     }
 
     const [result, total] = await queryBuilder

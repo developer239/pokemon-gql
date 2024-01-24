@@ -13,7 +13,9 @@ export class AuthSeedService implements ISeedService {
 
   async run() {
     const email = 'michal@email.com'
-    const password = 'password'
+    // TODO: init user Entity so that it hashes the password
+    const password =
+      '$2b$10$1XDVF7aBPMq3aPZAOqzYWukjYk7rtKDySXLo9KR5QhggIkL2PDRmq'
     await this.userRepository.save({
       email,
       password,

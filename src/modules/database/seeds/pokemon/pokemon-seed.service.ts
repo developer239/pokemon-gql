@@ -150,7 +150,6 @@ export class PokemonSeedService implements ISeedService {
       pokemon.fleeRate = rawPokemon.fleeRate
       pokemon.maxCP = rawPokemon.maxCP
       pokemon.maxHP = rawPokemon.maxHP
-      pokemon.isFavorite = false
       pokemon.attacks = []
 
       pokemon.evolutionRequirements =

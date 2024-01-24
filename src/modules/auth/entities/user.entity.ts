@@ -6,7 +6,11 @@ import {
   PrimaryGeneratedColumn,
   BeforeInsert,
   BeforeUpdate,
+  JoinTable,
+  ManyToMany,
+  Relation,
 } from 'typeorm'
+import { Pokemon } from 'src/modules/pokemon/entities/pokemon.entity'
 import { BaseEntity } from 'src/utils/base.entity'
 
 @ObjectType()
@@ -21,6 +25,12 @@ export class User extends BaseEntity {
   email: string
 
   @Column({ nullable: true }) password: string
+
+  @ManyToMany(() => Pokemon, (pokemon) => pokemon.favoritedBy, {
+    cascade: true,
+  })
+  @JoinTable()
+  favoritePokemons: Relation<Pokemon>[]
 
   @BeforeInsert()
   @BeforeUpdate()

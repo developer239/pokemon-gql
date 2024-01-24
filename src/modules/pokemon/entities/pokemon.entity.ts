@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
   Relation,
 } from 'typeorm'
+import { User } from 'src/modules/auth/entities/user.entity'
 import { Attack } from 'src/modules/pokemon/entities/attack.entity'
 import { EvolutionRequirement } from 'src/modules/pokemon/entities/evolution-requirement.enity'
 import { Dimension } from 'src/modules/pokemon/pokemon.types'
@@ -73,9 +74,8 @@ export class Pokemon extends BaseEntity {
   @Column()
   maxHP: number
 
-  @Field()
-  @Column('boolean')
-  isFavorite: boolean
+  @ManyToMany(() => User, (user) => user.favoritePokemons)
+  favoritedBy: Relation<User>[]
 
   @ManyToMany(() => Attack, (attack) => attack.pokemons, { cascade: true })
   @JoinTable()

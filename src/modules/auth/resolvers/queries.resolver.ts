@@ -1,9 +1,9 @@
 import { UseGuards } from '@nestjs/common'
 import { Resolver, Query } from '@nestjs/graphql'
+import { GetUserPayload } from 'src/modules/auth/decorators/user.decorator'
 import { User } from 'src/modules/auth/entities/user.entity'
 import { AuthGqlGuard } from 'src/modules/auth/guards/auth-gql.guard'
 import { AuthService } from 'src/modules/auth/services/auth.service'
-import { GetUserPayload } from 'src/modules/auth/strategies/user.decorator'
 
 @Resolver(() => User)
 export class QueriesResolver {

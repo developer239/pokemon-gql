@@ -1,4 +1,4 @@
-import { ParseIntPipe } from '@nestjs/common'
+import { ParseIntPipe, UseGuards } from '@nestjs/common'
 import {
   Resolver,
   Query,
@@ -7,6 +7,10 @@ import {
   ResolveField,
   Parent,
 } from '@nestjs/graphql'
+import { Public } from 'src/modules/auth/decorators/public.decorator'
+import { GetUserPayload } from 'src/modules/auth/decorators/user.decorator'
+import { User } from 'src/modules/auth/entities/user.entity'
+import { AuthGqlGuard } from 'src/modules/auth/guards/auth-gql.guard'
 import { Attack } from 'src/modules/pokemon/entities/attack.entity'
 import { EvolutionRequirement } from 'src/modules/pokemon/entities/evolution-requirement.enity'
 import { Pokemon } from 'src/modules/pokemon/entities/pokemon.entity'
@@ -39,9 +43,14 @@ export class QueriesResolver {
     return this.pokemonService.findAllTypes()
   }
 
+  @Public()
+  @UseGuards(AuthGqlGuard)
   @Query(() => PokemonList)
-  async pokemons(@Args('query') query: PokemonsQueryInput) {
-    const { items, count } = await this.pokemonService.findAll(query)
+  async pokemons(
+    @Args('query') query: PokemonsQueryInput,
+    @GetUserPayload() user?: User
+  ) {
+    const { items, count } = await this.pokemonService.findAll(query, user)
 
     return {
       limit: query.limit,
