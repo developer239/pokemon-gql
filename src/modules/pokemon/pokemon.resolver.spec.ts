@@ -78,6 +78,34 @@ describe('[GraphQL] PokemonResolver', () => {
         expect(response.status).toBe(200)
         expect(response.body.data.pokemons.items).toHaveLength(5)
       })
+
+      describe('when offset and limit is greater than total', () => {
+        it('should return what is left', async () => {
+          // Arrange
+          await testingEntityService.createTestPokemonCount(10)
+
+          const queryVariables = {
+            query: {
+              limit: 5,
+              offset: 7,
+            },
+          }
+
+          // Act
+          const server = app.getHttpServer()
+          const response = await request(server)
+            .post('/graphql')
+            .send({
+              query: POKEMONS_QUERY,
+              variables: queryVariables,
+            })
+            .set('Content-Type', 'application/json')
+
+          // Assert
+          expect(response.status).toBe(200)
+          expect(response.body.data.pokemons.items).toHaveLength(3)
+        })
+      })
     })
 
     describe('when search query provided', () => {
