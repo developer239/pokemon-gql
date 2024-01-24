@@ -6,6 +6,7 @@ import { GraphQLModule } from '@nestjs/graphql'
 import { Test } from '@nestjs/testing'
 import * as Joi from 'joi'
 import { appConfig, appConfigSchema } from 'src/config/app.config'
+import { authConfig, authConfigSchema } from 'src/config/auth.config'
 import {
   databaseConfig,
   databaseConfigSchema,
@@ -20,11 +21,12 @@ export const bootstrap = async (
     imports: [
       ConfigModule.forRoot({
         isGlobal: true,
-        load: [databaseConfig, appConfig],
+        load: [databaseConfig, appConfig, authConfig],
         envFilePath: ['.env.test', '.env'],
         validationSchema: Joi.object({
           ...appConfigSchema,
           ...databaseConfigSchema,
+          ...authConfigSchema,
         }),
       }),
       GraphQLModule.forRoot<ApolloDriverConfig>({

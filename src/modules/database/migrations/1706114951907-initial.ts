@@ -1,9 +1,12 @@
 import { MigrationInterface, QueryRunner } from 'typeorm'
 
-export class Initial1706048416729 implements MigrationInterface {
-  name = 'Initial1706048416729'
+export class Initial1706114951907 implements MigrationInterface {
+  name = 'Initial1706114951907'
 
   public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(
+      `CREATE TABLE "user" ("id" SERIAL NOT NULL, "email" character varying, "password" character varying, CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`
+    )
     await queryRunner.query(
       `CREATE TABLE "evolution_requirement" ("id" SERIAL NOT NULL, "amount" integer NOT NULL, "name" character varying NOT NULL, "pokemonId" integer, CONSTRAINT "REL_eb54d6af84755df0a6cdbed921" UNIQUE ("pokemonId"), CONSTRAINT "PK_d787a478c051421cdded8ba5581" PRIMARY KEY ("id"))`
     )
@@ -44,7 +47,7 @@ export class Initial1706048416729 implements MigrationInterface {
       `ALTER TABLE "pokemon_attacks_attack" ADD CONSTRAINT "FK_19b24fa3a623b239b34ac1ff0c4" FOREIGN KEY ("pokemonId") REFERENCES "pokemon"("id") ON DELETE CASCADE ON UPDATE CASCADE`
     )
     await queryRunner.query(
-      `ALTER TABLE "pokemon_attacks_attack" ADD CONSTRAINT "FK_811b8bebf7faf1ba136fdf446d9" FOREIGN KEY ("attackId") REFERENCES "attack"("id") ON DELETE CASCADE ON UPDATE CASCADE`
+      `ALTER TABLE "pokemon_attacks_attack" ADD CONSTRAINT "FK_811b8bebf7faf1ba136fdf446d9" FOREIGN KEY ("attackId") REFERENCES "attack"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`
     )
     await queryRunner.query(
       `ALTER TABLE "pokemon_evolutions_pokemon" ADD CONSTRAINT "FK_4aabae52d81ac07b00bbd1e57f2" FOREIGN KEY ("pokemonId_1") REFERENCES "pokemon"("id") ON DELETE CASCADE ON UPDATE CASCADE`
@@ -91,5 +94,6 @@ export class Initial1706048416729 implements MigrationInterface {
     )
     await queryRunner.query(`DROP TABLE "pokemon"`)
     await queryRunner.query(`DROP TABLE "evolution_requirement"`)
+    await queryRunner.query(`DROP TABLE "user"`)
   }
 }
