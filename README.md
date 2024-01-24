@@ -11,6 +11,10 @@
 
 ## Setup
 
+0. Install makefile
+   1. Linux: `sudo apt install make`
+   2. Mac: `brew install make`
+   3. Windows: `choco install make`
 1. Install dependencies: `make install` (the project uses [yarn](https://github.com/yarnpkg))
 2. Create local environment file: `cp .env.template .env`
 3. Run infrastructure `make infra` (`.db/init/init.sql` should automatically create `api_db` database)
