@@ -11,15 +11,16 @@
 
 ## Setup
 
-0. Install makefile
+1. Install nvm: 2. Linux: `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash` 3. Mac: `brew install nvm`
+2. Use nvm: `nvm use`
+3. Install makefile
    1. Linux: `sudo apt install make`
    2. Mac: `brew install make`
-   3. Windows: `choco install make`
-1. Install dependencies: `make install` (the project uses [yarn](https://github.com/yarnpkg))
-2. Create local environment file: `cp .env.template .env`
-3. Run infrastructure `make infra` (`.db/init/init.sql` should automatically create `api_db` database)
-4. Run database migrations: `make migration-run`
-5. (optional) Run tests: `make test` (make sure that `api_db_test` database exists)
+4. Install dependencies: `make install` (the project uses [yarn](https://github.com/yarnpkg))
+5. Create local environment file: `cp .env.template .env`
+6. Run infrastructure `make infra` (`.db/init/init.sql` should automatically create `api_db` database)
+7. Run database migrations: `make migration-run`
+8. (optional) Run tests: `make test` (make sure that `api_db_test` database exists)
 
 ## Development
 
