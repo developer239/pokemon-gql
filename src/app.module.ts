@@ -14,7 +14,6 @@ import { PokemonModule } from 'src/modules/pokemon/pokemon.module'
 import { ApolloComplexityPlugin } from 'src/utils/apollo-complexity.plugin'
 
 @Module({
-  // TODO: possibly add throttle
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import DataLoader from 'dataloader'
 import { Repository } from 'typeorm'
 import { Attack } from 'src/modules/pokemon/entities/attack.entity'
 import { EvolutionRequirement } from 'src/modules/pokemon/entities/evolution-requirement.enity'
@@ -16,6 +17,22 @@ export class PokemonService {
     @InjectRepository(EvolutionRequirement)
     private readonly evolutionRequirementRepository: Repository<EvolutionRequirement>
   ) {}
+
+  private readonly attackLoader = new DataLoader<number, Attack[]>((keys) =>
+    this.findAttacksByPokemonIds(keys)
+  )
+
+  private readonly evolutionLoader = new DataLoader<number, Pokemon[]>((keys) =>
+    this.findEvolutionsByPokemonIds(keys)
+  )
+
+  public getAttackLoader(): DataLoader<number, Attack[]> {
+    return this.attackLoader
+  }
+
+  public getEvolutionLoader(): DataLoader<number, Pokemon[]> {
+    return this.evolutionLoader
+  }
 
   async addFavorite(id: number): Promise<Pokemon> {
     const pokemon = await this.pokemonRepository.findOneOrFail({
@@ -79,14 +96,6 @@ export class PokemonService {
     return { items: result, count: total }
   }
 
-  findAttacksByPokemonId(id: number): Promise<Attack[]> {
-    return this.attackRepository
-      .createQueryBuilder('attack')
-      .innerJoinAndSelect('attack.pokemons', 'pokemon')
-      .where('pokemon.id = :id', { id })
-      .getMany()
-  }
-
   findEvolutionRequirementsByPokemonId(
     id: number
   ): Promise<EvolutionRequirement> {
@@ -95,11 +104,44 @@ export class PokemonService {
     })
   }
 
-  findEvolutionsByPokemonId(id: number): Promise<Pokemon[]> {
-    return this.pokemonRepository
+  private async findAttacksByPokemonIds(
+    pokemonIds: readonly number[]
+  ): Promise<Attack[][]> {
+    const attacks = await this.attackRepository
+      .createQueryBuilder('attack')
+      .innerJoinAndSelect('attack.pokemons', 'pokemon')
+      .where('pokemon.id IN (:...pokemonIds)', { pokemonIds })
+      .getMany()
+
+    const pokemonToAttacks: Record<number, Attack[]> = {}
+
+    attacks.forEach((attack) => {
+      attack.pokemons.forEach((pokemon) => {
+        if (pokemonToAttacks[pokemon.id]) {
+          pokemonToAttacks[pokemon.id].push(attack)
+        } else {
+          pokemonToAttacks[pokemon.id] = [attack]
+        }
+      })
+    })
+
+    return pokemonIds.map((id) => pokemonToAttacks[`${id}`])
+  }
+
+  private async findEvolutionsByPokemonIds(
+    pokemonIds: readonly number[]
+  ): Promise<Pokemon[][]> {
+    const evolutions = await this.pokemonRepository
       .createQueryBuilder('pokemon')
       .innerJoinAndSelect('pokemon.evolutions', 'evolution')
-      .where('evolution.id = :id', { id })
+      .where('pokemon.id IN (:...pokemonIds)', { pokemonIds })
       .getMany()
+
+    const pokemonToEvolutions: Record<number, Pokemon[]> = {}
+    evolutions.forEach((pokemon) => {
+      pokemonToEvolutions[pokemon.id] = pokemon.evolutions
+    })
+
+    return pokemonIds.map((id) => pokemonToEvolutions[`${id}`] || [])
   }
 }

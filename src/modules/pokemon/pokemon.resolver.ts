@@ -17,7 +17,6 @@ import {
   PokemonsQueryInput,
 } from 'src/modules/pokemon/pokemon.types'
 
-// TODO: use data loader and resolve n+1 problem
 @Resolver(() => Pokemon)
 export class PokemonResolver {
   constructor(private readonly pokemonService: PokemonService) {}
@@ -61,7 +60,7 @@ export class PokemonResolver {
 
   @ResolveField(() => [Attack])
   attacks(@Parent() pokemon: Pokemon): Promise<Attack[]> {
-    return this.pokemonService.findAttacksByPokemonId(pokemon.id)
+    return this.pokemonService.getAttackLoader().load(pokemon.id)
   }
 
   @ResolveField(() => EvolutionRequirement)
@@ -74,6 +73,6 @@ export class PokemonResolver {
   // TODO: write test for recursive query
   @ResolveField(() => [Pokemon])
   evolutions(@Parent() pokemon: Pokemon): Promise<Pokemon[]> {
-    return this.pokemonService.findEvolutionsByPokemonId(pokemon.id)
+    return this.pokemonService.getEvolutionLoader().load(pokemon.id)
   }
 }
