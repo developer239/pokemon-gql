@@ -11,6 +11,7 @@ import {
 import { DatabaseModule } from 'src/modules/database/database.module'
 import { HomeModule } from 'src/modules/home/home.module'
 import { PokemonModule } from 'src/modules/pokemon/pokemon.module'
+import { ApolloComplexityPlugin } from 'src/utils/apollo-complexity.plugin'
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { PokemonModule } from 'src/modules/pokemon/pokemon.module'
       playground: true,
       autoSchemaFile: true,
       introspection: true,
+      plugins: [new ApolloComplexityPlugin(50)],
     }),
     DatabaseModule,
     HomeModule,
