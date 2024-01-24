@@ -15,6 +15,7 @@
 2. Create local environment file: `cp .env.template .env`
 3. Run infrastructure `make infra` (`.db/init/init.sql` should automatically create `api_db` database)
 4. Run database migrations: `make migration-run`
+5. (optional) Run tests: `make test` (make sure that `api_db_test` database exists)
 
 ## Development
 
