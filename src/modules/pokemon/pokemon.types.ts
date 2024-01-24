@@ -23,6 +23,9 @@ export class PokemonsQueryInput {
 
   @Field({ nullable: true })
   type: string
+
+  @Field({ nullable: true })
+  isFavorite: boolean
 }
 
 @ObjectType()

@@ -191,6 +191,96 @@ describe('Pokemons', () => {
           )
         })
       })
+
+      describe('when isFavorite query provided', () => {
+        it('should return a list of pokemons that match the isFavorite query', async () => {
+          // Arrange
+          await testingEntityService.createTestPokemon({
+            isFavorite: false,
+          })
+          await testingEntityService.createTestPokemon({
+            isFavorite: true,
+          })
+          await testingEntityService.createTestPokemon({
+            isFavorite: true,
+          })
+
+          const queryVariables = {
+            query: {
+              limit: 10,
+              offset: 0,
+              isFavorite: true,
+            },
+          }
+
+          // Act
+          const server = app.getHttpServer()
+          const response = await request(server)
+            .post('/graphql')
+            .send({
+              query: POKEMONS_QUERY,
+              variables: queryVariables,
+            })
+            .set('Content-Type', 'application/json')
+
+          // Assert
+          expect(response.status).toBe(200)
+          expect(response.body.data.pokemons.items).toHaveLength(2)
+        })
+      })
+
+      describe('when multiple params are provided', () => {
+        it('should return a list of pokemons that match the params', async () => {
+          // Arrange
+          const pokemon0 = await testingEntityService.createTestPokemon({
+            name: '123pokemon1',
+            types: ['type0', 'type1'],
+            isFavorite: true,
+          })
+          await testingEntityService.createTestPokemon({
+            name: '123pokemon2',
+            types: ['type1', 'type2'],
+            isFavorite: true,
+          })
+          await testingEntityService.createTestPokemon({
+            name: '123pokemon3',
+            types: ['type2', 'type3'],
+            isFavorite: true,
+          })
+          const pokemonToSearch = pokemon0.pokemon
+          const pokemonNameToSearch = '23pokemon'
+          const pokemonTypeToSearch = 'type0'
+
+          const queryVariables = {
+            query: {
+              limit: 10,
+              offset: 0,
+              search: pokemonNameToSearch,
+              type: pokemonTypeToSearch,
+              isFavorite: true,
+            },
+          }
+
+          // Act
+          const server = app.getHttpServer()
+          const response = await request(server)
+            .post('/graphql')
+            .send({
+              query: POKEMONS_QUERY,
+              variables: queryVariables,
+            })
+            .set('Content-Type', 'application/json')
+
+          // Assert
+          expect(response.status).toBe(200)
+          expect(response.body.data.pokemons.items[0].id).toStrictEqual(
+            String(pokemonToSearch.id)
+          )
+          expect(response.body.data.pokemons.items[0].name).toStrictEqual(
+            pokemonToSearch.name
+          )
+        })
+      })
     })
 
     describe('[resolver] pokemonById', () => {

@@ -83,7 +83,7 @@ export class PokemonService {
   async findAll(
     query: PokemonsQueryInput
   ): Promise<{ items: Pokemon[]; count: number }> {
-    const { limit, offset, search, type } = query
+    const { limit, offset, search, type, isFavorite } = query
 
     const queryBuilder = this.pokemonRepository.createQueryBuilder('pokemon')
 
@@ -95,6 +95,10 @@ export class PokemonService {
 
     if (type) {
       queryBuilder.andWhere('pokemon.types ILIKE :type', { type: `%${type}%` })
+    }
+
+    if (isFavorite) {
+      queryBuilder.andWhere('pokemon.isFavorite = :isFavorite', { isFavorite })
     }
 
     const [result, total] = await queryBuilder
