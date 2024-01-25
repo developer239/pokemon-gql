@@ -77,4 +77,6 @@ export class QueriesResolver {
   evolutions(@Parent() pokemon: Pokemon): Promise<Pokemon[]> {
     return this.pokemonLoaderService.getEvolutionLoader().load(pokemon.id)
   }
+
+  // TODO: implement missing isFavorite field resolver
 }
