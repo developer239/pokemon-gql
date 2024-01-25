@@ -112,20 +112,12 @@ export class PokemonSeedService implements ISeedService {
           carry[`${attackKey}`] = attack
         }
 
-        Logger.log(
-          `Prepared ${
-            pokemonAttacks.length
-          } attack(s) for pokemon: ${JSON.stringify(rawPokemon.id)}`
-        )
-
         return carry
       },
       {} as { [key: string]: Attack }
     )
 
     const flattenedAttacks = Object.values(attacks)
-
-    Logger.log(`Linking ${flattenedAttacks.length} attack(s)`)
 
     return this.attackRepository.save(flattenedAttacks)
   }
@@ -157,15 +149,13 @@ export class PokemonSeedService implements ISeedService {
 
       pokemon.evolutions = []
 
-      Logger.log(`Prepared pokemon: ${JSON.stringify(pokemon.number)}`)
-
       return pokemon
     })
 
     const newlyInserted = await this.pokemonRepository.save(pokemons)
     const count = newlyInserted.length
 
-    Logger.log(`Inserted ${count} pokemons`)
+    Logger.log(`Inserted ${count} pokemons`, 'PokemonSeedService')
 
     return newlyInserted
   }
@@ -202,11 +192,6 @@ export class PokemonSeedService implements ISeedService {
           ) || []
 
         const evolutions = [...previous, ...next]
-        Logger.log(
-          `Linking ${
-            evolutions.length
-          } evolution(s) for pokemon: ${JSON.stringify(pokemon.number)}`
-        )
 
         return this.pokemonRepository
           .createQueryBuilder('pokemon')
@@ -265,12 +250,6 @@ export class PokemonSeedService implements ISeedService {
           }) || []
 
         attacks.push(...fastAttacks, ...specialAttacks)
-
-        Logger.log(
-          `Linking ${attacks.length} attack(s) for pokemon: ${JSON.stringify(
-            pokemon.number
-          )}`
-        )
 
         return this.pokemonRepository
           .createQueryBuilder('pokemon')

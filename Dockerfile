@@ -4,6 +4,8 @@ FROM --platform=linux/amd64 node:20-alpine3.18 AS build
 WORKDIR /app
 
 COPY package*.json yarn.lock ./
+COPY pokemons.json ./
+
 RUN yarn install --production=false
 
 COPY . .
@@ -16,11 +18,13 @@ FROM --platform=linux/amd64 node:20-alpine3.18 AS production
 WORKDIR /app
 
 COPY package*.json yarn.lock ./
+
 RUN yarn install --production
 
 COPY --from=build /app/dist /app/dist
+COPY --from=build /app/pokemons.json /app/pokemons.json
 
 ENV PORT=8080
 EXPOSE 8080
 
-CMD ["node", "/app/dist/main"]
+CMD ["node", "dist/main.js"]

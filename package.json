@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "license": "MIT",
   "engines": {
-    "node": "20"
+    "node": ">=18"
   },
   "dependencies": {
     "@apollo/server": "^4.10.0",

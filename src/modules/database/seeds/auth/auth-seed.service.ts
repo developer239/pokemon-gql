@@ -12,14 +12,16 @@ export class AuthSeedService implements ISeedService {
   ) {}
 
   async run() {
-    const email = 'michal@email.com'
-    // TODO: init user Entity so that it hashes the password
-    const password =
-      '$2b$10$1XDVF7aBPMq3aPZAOqzYWukjYk7rtKDySXLo9KR5QhggIkL2PDRmq'
-    await this.userRepository.save({
-      email,
-      password,
+    const plainPassword = 'password1234'
+    const user = this.userRepository.create({
+      email: 'michal@mail.com',
+      password: plainPassword,
     })
-    Logger.log(`Created user with email: ${email} and password: ${password}`)
+    await this.userRepository.save(user)
+
+    Logger.log(
+      `\x1b[34mCreated user with email: ${user.email} and password: ${plainPassword}`,
+      'AuthSeedService'
+    )
   }
 }

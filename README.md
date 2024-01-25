@@ -9,24 +9,20 @@
 - [Database](#database)
 - [Testing](#testing)
 
+## Run with Docker
+
+```bash
+docker-compose up
+```
+
+**Note:** By default it uses `.env.template`.
+
 ## Dev Setup
 
 1. Install dependencies: `make install` (the project uses [yarn](https://github.com/yarnpkg))
 2. Create local environment file: `cp .env.template .env`
 3. Run infrastructure `make infra` (`.db/init/init.sql` should automatically create `api_db` database)
-4. Run database migrations: `make migration-run`
-5. Seed database: `make seed-database`
-6. Run development server: `make develop`
-7. Go to `localhost:8080/graphql`
-
-## Dev Setup Docker
-
-1. Install dependencies: `make install` (the project uses [yarn](https://github.com/yarnpkg))
-2. Create local environment file: `cp .env.template .env`
-3. Run dev docker compose `docker-compose -f compose-full.dev.yaml up`
-4. Run database migrations: `make migration-run`
-5. Seed database: `make seed-database`
-6. Go to `localhost:8080/graphql`
+4. Run development server: `make develop`
 
 ## Development
 

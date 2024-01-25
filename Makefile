@@ -7,7 +7,7 @@ DATASOURCE := src/modules/database/data-source.ts
 ## Rules ##
 
 infra:
-	docker compose up -d --force-recreate
+	docker compose -f docker-compose.dev-db.yml up -d --force-recreate
 
 infra-stop:
 	docker compose stop

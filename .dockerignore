@@ -10,7 +10,7 @@ dist/
 # Configuration files
 .editorconfig
 .gitignore
-compose.yml
+docker-compose.dev-db.yml
 compose.*.yml
 
 # Other
