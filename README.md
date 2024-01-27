@@ -17,7 +17,7 @@ docker-compose up
 
 **Note:** By default it uses `.env.template`.
 
-## Dev Setup
+## Setup
 
 1. Install dependencies: `make install` (the project uses [yarn](https://github.com/yarnpkg))
 2. Create local environment file: `cp .env.template .env`
