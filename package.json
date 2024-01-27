@@ -1,5 +1,5 @@
 {
-  "name": "template-nestjs-api",
+  "name": "pokemon-api-gql",
   "version": "0.0.1",
   "license": "MIT",
   "engines": {
