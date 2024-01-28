@@ -10,23 +10,22 @@ export class AuthGqlGuard extends AuthGuard('jwt') {
     super()
   }
 
-  async canActivate(context: ExecutionContext) {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
-      // authorize user
-      const result = await super.canActivate(context)
-      return result
+      // Attempt to authenticate the user for all routes
+      return (await super.canActivate(context)) as boolean
     } catch (error) {
-      // if user is not authorized, check if the route is public
       const isPublic = this.reflector.getAllAndOverride<boolean>(
         IS_PUBLIC_KEY,
         [context.getHandler(), context.getClass()]
       )
 
-      // authorize user
+      // If the route is public, allow access even if there's an error in authentication
       if (isPublic) {
-        return true as any
+        return true
       }
 
+      // For non-public routes, rethrow the error
       throw error
     }
   }
