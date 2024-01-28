@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { ILike, Repository } from 'typeorm'
 import { User } from 'src/modules/auth/entities/user.entity'
 import { EvolutionRequirement } from 'src/modules/pokemon/entities/evolution-requirement.enity'
 import { Pokemon } from 'src/modules/pokemon/entities/pokemon.entity'
@@ -64,7 +64,10 @@ export class PokemonService {
   }
 
   async findByName(name: string): Promise<Pokemon> {
-    const result = await this.pokemonRepository.findOne({ where: { name } })
+    const result = await this.pokemonRepository.findOne({
+      where: { name: ILike(`%${name}%`) },
+      relations: ['evolutions'],
+    })
 
     if (!result) {
       throw new NotFoundException('Pokemon not found')
